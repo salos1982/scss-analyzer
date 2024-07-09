@@ -1,20 +1,11 @@
 import { dirname, join, normalize } from "path";
 import postcss from "postcss";
-import { COLOR_CODE } from "./constants";
-import { CodePosition, ScssClass, ScssImportFile, TsxClass, WarnProps } from "./types";
+import { CodePosition, ScssClass, ScssImportFile, TsxClass } from "./types";
 import { readFileSync, readdirSync, statSync } from "fs";
 import { LinesAndColumns } from 'lines-and-columns';
 import { decode as decodeSourceMap } from '@jridgewell/sourcemap-codec';
 
 import { compileString } from "sass";
-
-export const sendWarning = ({ title, description, array }: WarnProps) => {
-  console.warn(
-    `${COLOR_CODE.YELLOW}WARNING:${COLOR_CODE.DEFAULT} ${title} ${COLOR_CODE.GRAY}- ${description}${COLOR_CODE.DEFAULT}`
-  );
-  console.log(array);
-  console.log("\n");
-};
 
 export const getAllTsxFiles = (directory: string): string[] => {
   let tsxFiles: string[] = [];

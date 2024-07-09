@@ -4,7 +4,6 @@ import {
   getDuplicateClasses,
   getScssClasses,
   getTsxClasses,
-  sendWarning,
   processTsxFiles,
 } from "./utils";
 import { NonExisting, ScssClass } from "./types";

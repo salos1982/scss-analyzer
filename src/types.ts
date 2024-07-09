@@ -30,12 +30,6 @@ export interface TsxClass {
   usages: ClassUsage[];
 }
 
-export interface WarnProps {
-  title: string;
-  description: string;
-  array: any[];
-}
-
 export interface NonExisting {
   usage: ClassUsage;
   tsxFile: string;
