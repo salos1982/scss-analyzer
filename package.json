@@ -1,0 +1,36 @@
+{
+  "name": "scss-inspector",
+  "version": "1.0.49",
+  "description": "Inspects scss modules and tsx files for unused, non-existent, and duplicate scss classes",
+  "main": "public/index.js",
+  "bin": {
+    "scss-inspector": "public/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node ./src/index.ts 'D:\\work\\runmylease\\dealership-website'"
+  },
+  "keywords": [
+    "scss",
+    "inspector",
+    "css",
+    "module",
+    "typescript"
+  ],
+  "author": "Sergey Solozhentsev",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@jridgewell/sourcemap-codec": "^1.4.15",
+    "install": "^0.13.0",
+    "lines-and-columns": "^2.0.4",
+    "npm": "^10.8.1",
+    "postcss": "^8.4.38",
+    "postcss-scss": "^4.0.9",
+    "sass": "^1.77.6",
+    "ts-node": "^10.9.2"
+  }
+}
