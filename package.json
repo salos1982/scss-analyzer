@@ -3,8 +3,14 @@
   "version": "1.0.0",
   "description": "Analyze scss modules and tsx files for unused, non-existent scss classes",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "bundle": "tsup"
   },
   "repository": {
     "type": "git",
@@ -22,6 +28,7 @@
   "devDependencies": {
     "@types/node": "^20.12.7",
     "ts-node": "^10.9.2",
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5"
   },
   "dependencies": {

@@ -19,7 +19,7 @@ It is helpful if you meet folowing code condtions
 
 ## Installation
 ```
-npm install --svae-dev scss-code-analyzer
+npm install --save-dev scss-code-analyzer
 ```
 
 ## Usage

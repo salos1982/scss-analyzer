@@ -1,4 +1,4 @@
-import path from "path";
+#!/usr/bin/env node
 import {
   getAllTsxFiles,
   getDuplicateClasses,
