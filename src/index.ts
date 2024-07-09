@@ -74,4 +74,9 @@ const main = async (projectDirectory: string) => {
   })*/
 };
 
-main(process.argv[2]);
+let projectDir = process.argv[2];
+if (!projectDir) {
+  projectDir = process.cwd();
+}
+
+main(projectDir);

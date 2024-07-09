@@ -1,14 +1,14 @@
 {
-  "name": "scss-analyzer",
+  "name": "scss-code-analyzer",
   "version": "1.0.0",
-  "description": "Analyze scss modules and tsx files for unused, non-existent, and duplicate scss classes",
-  "main": "public/index.js",
-  "bin": {
-    "scss-inspector": "public/index.js"
-  },
+  "description": "Analyze scss modules and tsx files for unused, non-existent scss classes",
+  "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "ts-node ./src/index.ts 'D:\\work\\runmylease\\dealership-website'"
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salos1982/scss-code-analyzer"
   },
   "keywords": [
     "scss",
