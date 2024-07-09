@@ -13,7 +13,7 @@ const main = async (projectDirectory: string) => {
   const nonExistedClasses: NonExisting[] = [];
   const unusedClasses: ScssClass[] = [];
 
-  const allTsxFiles = getAllTsxFiles(path.join(projectDirectory, "src"));
+  const allTsxFiles = getAllTsxFiles(projectDirectory);
   const scssImportMap = processTsxFiles(allTsxFiles);
   const scssFiles = Array.from(scssImportMap.keys());
 
