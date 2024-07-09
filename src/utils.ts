@@ -1,6 +1,6 @@
 import { dirname, join, normalize } from "path";
 import postcss from "postcss";
-import { CodePosition, ScssClass, ScssImportFile, TsxClass } from "./types";
+import { CodePosition, CssContent, DuplicateScssClasses, ScssClass, ScssImportFile, TsxClass } from "./types";
 import { readFileSync, readdirSync, statSync } from "fs";
 import { LinesAndColumns } from 'lines-and-columns';
 import { decode as decodeSourceMap } from '@jridgewell/sourcemap-codec';
@@ -25,7 +25,7 @@ export const getAllTsxFiles = (directory: string): string[] => {
   return tsxFiles;
 };
 
-export function processTsxFiles(tsxFiles: string[], projectDirectory: string): Map<string, ScssImportFile[]> {
+export function processTsxFiles(tsxFiles: string[]): Map<string, ScssImportFile[]> {
   const scssFilesMap = new Map<string, ScssImportFile[]>();
 
   tsxFiles.forEach((tsxFile: string) => {
@@ -69,7 +69,6 @@ export const getScssClasses = async (scssFile: string) => {
       const processedRow = mappingValues[2];
       const processedCol = mappingValues[3];
       positionMap.set(`${sourceRow}, ${sourceCol}`, {line: processedRow! + 1, column: processedCol! + 1 })
-      //console.log(`(${sourceRow}, ${sourceCol}) => (${processedRow}, ${processedCol})`);
     }
   }
 
@@ -143,17 +142,29 @@ export const getTsxClasses = (tsxFiles: ScssImportFile[]) => {
   return tsxClasses;
 };
 
-export const getDuplicateClasses = async (scssFile: string) => {
-  const classes = await getScssClasses(scssFile);
+function convertContentToString(content: CssContent): string {
+  return content.sort().join(';');
+}
 
-  /*const uniqueClasses = new Set();
-  const duplicateClasses = classes.filter((item) => {
-    if (uniqueClasses.has(item)) return true;
-    uniqueClasses.add(item);
-    return false;
-  });
+export function getDuplicateClasses(scssClasses: ScssClass[]): DuplicateScssClasses[] {
+  const contentMap = new Map<string, DuplicateScssClasses>();
+  scssClasses.forEach((scssClass) => {
+    const key = convertContentToString(scssClass.content);
+    const duplicate = contentMap.get(key);
+    if (!duplicate) {
+      contentMap.set(key, { content: scssClass.content, classes: [scssClass]});
+    } else {
+      if (!duplicate.classes.some((existingClass) => 
+        existingClass.file === scssClass.file &&
+        existingClass.position.line === scssClass.position.line &&
+        existingClass.position.column === existingClass.position.column)
+      ) {
+        duplicate.classes.push(scssClass);
+      }
+    }
+  })
 
-  retuturn duplicateClasses;*/
-  return [];
+
+  return Array.from(contentMap.values()).filter((item) => item.classes.length > 1);
   
 };

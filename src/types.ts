@@ -13,11 +13,13 @@ export interface CodePosition {
   column: number;
 }
 
+export type CssContent = string[];
+
 export interface ScssClass {
   name: string;
   file: string;
   position: CodePosition;
-  content: string[];
+  content: CssContent;
 }
 
 export interface ClassUsage {
@@ -34,4 +36,9 @@ export interface NonExisting {
   usage: ClassUsage;
   tsxFile: string;
   scssFile: string;
+}
+
+export interface DuplicateScssClasses {
+  content: CssContent;
+  classes: ScssClass[];
 }
