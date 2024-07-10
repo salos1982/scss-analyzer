@@ -1,6 +1,6 @@
 # Scss Code Analyzer
 
-Scss Code Analyzer is a tool for cleaning code from scss waste. After some time of development code contains references to styles that are not already exists or scss files contains classes that are not used anymore. It creates difficulties for new developers in reading code and increase package size for new users.
+Scss Code Analyzer is a tool for cleaning code from scss waste. After some time of development the code contains references to styles that are not already exists or scss files contain classes that are not used anymore. It creates difficulties for new developers in reading code and increase package size for new users.
 
 ## Limitations
 
