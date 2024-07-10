@@ -1,6 +1,6 @@
 {
   "name": "scss-code-analyzer",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Analyze scss modules and tsx files for unused, non-existent scss classes",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "build": "tsc",
-    "bundle": "tsup"
+    "bundle": "tsup",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
