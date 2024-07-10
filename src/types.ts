@@ -27,7 +27,7 @@ export interface ClassUsage {
   position: CodePosition;
 }
 
-export interface TsxClass {
+export interface ScssClassUsage {
   tsxFile: string;
   usages: ClassUsage[];
 }

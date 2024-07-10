@@ -1,6 +1,6 @@
 import { dirname, join, normalize } from "path";
 import postcss from "postcss";
-import { CodePosition, CssContent, DuplicateScssClasses, ScssClass, ScssImportFile, TsxClass } from "./types";
+import { CodePosition, CssContent, DuplicateScssClasses, ScssClass, ScssImportFile, ScssClassUsage, ClassUsage } from "./types";
 import { readFileSync, readdirSync, statSync } from "fs";
 import { LinesAndColumns } from 'lines-and-columns';
 import { decode as decodeSourceMap } from '@jridgewell/sourcemap-codec';
@@ -107,39 +107,66 @@ function getLineColumn(text: string, position: number): CodePosition {
   }
 }
 
-export const getTsxClasses = (tsxFiles: ScssImportFile[]) => {
-  const tsxClasses: TsxClass[] = [];
+export function findAllUsagesOfClassInTsx(tsxContent: string, scssFile: ScssImportFile): ClassUsage[] {
+  const regExText = `(?<!(\\w|\\.))${scssFile.importName}\\.(\\w+)`;
+  const regEx = new RegExp(regExText, "gm");
 
-  tsxFiles.forEach((tsxFile: ScssImportFile) => {
-    const tsxContent = readFileSync(tsxFile.tsxFile, "utf-8");
-    //const regExText = `^(?!import\\s+).*\\b(${tsxFile.importName}\\.\\w+)`;
-    const regExText = `^(?!import\\s+).*(?<!(\\w|\\.))(${tsxFile.importName}\\.\\w+)`;
+  const classNamesLines = Array.from(tsxContent.matchAll(regEx));
+  const classUsages: ClassUsage[] = [];
+  if (classNamesLines) {
+    classNamesLines.forEach((regexResult: RegExpExecArray) => {
+      const endOfLineIndex = tsxContent.lastIndexOf("\n", regexResult.index) + 1;
+      if (!tsxContent.substring(endOfLineIndex, regexResult.index).trim().startsWith("import ")) {
+        const positionInFile = regexResult.index;
+      
+        const className = regexResult[2];
+        
+        const position = getLineColumn(tsxContent, positionInFile);
+        classUsages.push({ class: className, position });
+      }
+    });
+  }
+  return classUsages;
+}
+
+export const getTsxClasses = (scssFiles: ScssImportFile[]) => {
+  const scssClassUsages: ScssClassUsage[] = [];
+
+  scssFiles.forEach((scssFile: ScssImportFile) => {
+    const tsxContent = readFileSync(scssFile.tsxFile, "utf-8");
+    const regExText = `^(?!import\\s+).*(?<!(\\w|\\.))(${scssFile.importName}\\.\\w+)`;
     const regEx = new RegExp(regExText, "gm");
 
     const classNamesLines = Array.from(tsxContent.matchAll(regEx));
-
+    const classUsages: ClassUsage[] = findAllUsagesOfClassInTsx(tsxContent, scssFile);
+    
     if (classNamesLines) {
       classNamesLines.forEach((regexResult: RegExpExecArray) => {
         const className = regexResult[2];
         const positionInFile = regexResult.index + regexResult[0].indexOf(className);
-        const formattedClassName = className.replace(`${tsxFile.importName}.`, "");
-        const existingObject = tsxClasses.find(
-          (obj) => obj.tsxFile === tsxFile.tsxFile
-        );
+        const formattedClassName = className.replace(`${scssFile.importName}.`, "");
+       
         const position = getLineColumn(tsxContent, positionInFile);
-        if (existingObject) {
-          existingObject.usages.push({ class: formattedClassName, position });
-        } else {
-          tsxClasses.push({
-            tsxFile: tsxFile.tsxFile,
-            usages: [{ class: formattedClassName, position }],
-          });
-        }
+        classUsages.push({ class: formattedClassName, position });
       });
+    }
+
+    if (classUsages.length) {
+      const tsxFileUsage = scssClassUsages.find(
+        (obj) => obj.tsxFile === scssFile.tsxFile
+      );
+      if (!tsxFileUsage) {
+        scssClassUsages.push({
+          tsxFile: scssFile.tsxFile,
+          usages: classUsages,
+        });
+      } else {
+        tsxFileUsage.usages.push(...classUsages);
+      }
     }
   });
 
-  return tsxClasses;
+  return scssClassUsages;
 };
 
 function convertContentToString(content: CssContent): string {
