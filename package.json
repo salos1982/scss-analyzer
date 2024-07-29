@@ -1,6 +1,6 @@
 {
   "name": "scss-code-analyzer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Analyze scss modules and tsx files for unused, non-existent scss classes",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
