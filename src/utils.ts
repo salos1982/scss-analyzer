@@ -1,4 +1,4 @@
-import { dirname, join, normalize } from "path";
+import { dirname, join, normalize, resolve } from "path";
 import postcss from "postcss";
 import { CodePosition, CssContent, DuplicateScssClasses, ScssClass, ScssImportFile, ScssClassUsage, ClassUsage } from "./types";
 import { readFileSync, readdirSync, statSync } from "fs";
@@ -57,7 +57,8 @@ export const getScssClasses = async (scssFile: string) => {
   const scssClasses = new Map<string, ScssClass>();
 
   const fileContent = readFileSync(scssFile, "utf-8");
-  const processedCss = compileString(fileContent, { sourceMap: true, url: new URL(`file:///${scssFile}`) });
+  const absoluteScssPath = resolve(scssFile);
+  const processedCss = compileString(fileContent, { sourceMap: true, url: new URL(`file:///${absoluteScssPath}`) });
   const decodedMappings = decodeSourceMap(processedCss.sourceMap!.mappings);
   const positionMap = new Map<string, CodePosition>();
   for (let i = 0; i < decodedMappings.length; i++) {
